@@ -4,6 +4,7 @@ from khl.card import Card, CardMessage, Module, Element
 from .logger import cmdLogger
 from .exceptions import default_exc_handler
 
+
 def help_command(bot: Bot) -> None:
     @bot.command(name='help',
                  aliases=['帮助', '机器人帮助'],

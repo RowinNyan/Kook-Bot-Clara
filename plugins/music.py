@@ -1,13 +1,18 @@
-import requests, json, re
+import requests
+import json
+import re
+import os
 
 from khl import Bot
 
-from .exceptions import Exceptions
+from .exceptions import Errors
+
 
 QQMUSIC_SEARCH_API = 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp?p=1&w='
 QQMUSIC_CLIENT_SONG_API = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
 QQMUSIC_SONG_BASICURL = 'http://dl.stream.qqmusic.qq.com/'
 QQMUSIC_SONG_COVER = 'http://y.qq.com/music/photo_new/T002R300x300M000{id}.jpg'
+
 
 def secToTime(second: int) -> str:
     min = second // 60
@@ -40,7 +45,7 @@ async def searchMusic(music_name: str) -> list[dict[str, str]]:
             })
         return output
     else:
-        raise Exceptions.ResponseError(content.get('code', -1))
+        raise Errors.ResponseError(content.get('code', -1))
 
 async def getMusic(bot: Bot, music_name: str) -> dict[str, str]:
     music_list = await searchMusic(music_name)
@@ -58,12 +63,13 @@ async def getMusic(bot: Bot, music_name: str) -> dict[str, str]:
                 }
             }
         }
-        with open('.\\temp\\qqmusic\\token.txt', 'r', encoding='utf-8') as file:
-            for line in file:
-                cookie = line
+        cookies: str = ''
+        if os.path.exists('.\\config\\qqmusic_cookie'):
+            with open('.\\config\\qqmusic_cookie', 'r', encoding='utf-8') as file:
+                cookies += ''.join([line.strip() for line in file])
         r = requests.post(url=QQMUSIC_CLIENT_SONG_API,
                           data=json.dumps(data, ensure_ascii=False),
-                          headers={'Cookie': cookie})
+                          headers={'Cookie': cookies})
         content: dict = json.loads(r.content)
         if content.get('code', -1) == 0:
             purl = content['vkey.GetVkeyServer']['data']['midurlinfo'][0]['purl']

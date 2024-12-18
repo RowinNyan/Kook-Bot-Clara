@@ -1,5 +1,6 @@
 import random
 
+
 lucky_list: dict[str, int] = dict()
 
 def lucky(user: str) -> int:

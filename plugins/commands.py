@@ -3,7 +3,7 @@ from khl.card import Card, CardMessage, Module, Element, Types
 import kookvoice
 
 from .globals import NAME, DESCR, VER, DEV, TOKEN
-from .exceptions import default_exc_handler, Exceptions
+from .exceptions import default_exc_handler, Errors, Warnings
 from .logger import cmdLogger
 from .lucky import lucky, luckyText
 from .image import splitExpr, imgUpload, getImage
@@ -12,14 +12,16 @@ from .music import getMusic, findUser, escape_markdown
 from .help import help_command
 from .debug import debug_command
 
+
 def initCommands(bot: Bot) -> None:
+
     @bot.command(name='fortune',
                  aliases=['lucky', '今日人品'],
                  case_sensitive=False,
                  exc_handlers=default_exc_handler)
     @cmdLogger
     async def cmdFortune(msg: Message, *args: str):
-        if args: raise Exceptions.ParameterException('None')
+        if args: raise Errors.ParameterError('None')
         d_lucky = lucky(msg.author_id)
         await msg.reply(luckyText(d_lucky), use_quote=False)
 
@@ -37,7 +39,7 @@ def initCommands(bot: Bot) -> None:
             else:
                 music_info = await getMusic(bot, music_name)
                 player = kookvoice.Player(msg.ctx.guild.id, vid, TOKEN)
-                if music_info is None: raise Exceptions.MusicSearchWarning(music_name)
+                if music_info is None: raise Warnings.MusicSearchWarning(music_name)
                 player.add_music(music=music_info.get('url'))
                 i_url = await imgUpload(bot, music_info.get('cover'), music_info.get('music_id'))
                 music = music_info.get('music_name')
@@ -58,7 +60,7 @@ def initCommands(bot: Bot) -> None:
                  exc_handlers=default_exc_handler)
     @cmdLogger
     async def cmdSkip(msg: Message, *args: str):
-        if args: raise Exceptions.ParameterException('None')
+        if args: raise Errors.ParameterError('None')
         player = kookvoice.Player(msg.ctx.guild.id)
         player.skip()
         await msg.reply('歌曲已跳过。', use_quote=False)
@@ -92,7 +94,7 @@ def initCommands(bot: Bot) -> None:
                  exc_handlers=default_exc_handler)
     @cmdLogger
     async def cmdAbout(msg: Message, *args: str):
-        if args: raise Exceptions.ParameterException('None')
+        if args: raise Errors.ParameterError('None')
         c = Card(Module.Header(Element.Text(f'关于 {NAME} Bot')),
                  Module.Divider(),
                  Module.Section(Element.Text(f'{DESCR}', type=Types.Text.PLAIN),

@@ -3,6 +3,5 @@ temp/
 log/
 __pycache__/
 plugins/__pycache__/
-*.json
-*.bat
+config/
 *.ps1

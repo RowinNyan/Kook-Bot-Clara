@@ -3,11 +3,14 @@ import asyncio
 from khl import Bot
 import kookvoice
 
-from plugins.globals import TOKEN
-from plugins.commands import initCommands
-from plugins.crontasks import initCrons
-from plugins.events import initEvents
-from plugins.logger import addLog
+from plugins import (
+    TOKEN,
+    initCommands,
+    initCrons,
+    initEvents,
+    addLog
+)
+
 
 bot = Bot(token=TOKEN)
 kookvoice.set_ffmpeg('.\\ffmpeg\\ffmpeg.exe')

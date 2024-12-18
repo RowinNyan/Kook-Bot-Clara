@@ -1,9 +1,12 @@
-import requests, json, os
+import requests
+import json
+import os
 
 from khl import Bot
 
 from .logger import addLog
-from .exceptions import Exceptions
+from .exceptions import Errors
+
 
 def splitExpr(expr: str) -> list[list]:
     output = []
@@ -27,7 +30,7 @@ async def imgUpload(bot: Bot, img_url: str, img_name: str) -> str:
             os.remove(path)
             addLog(f'[FILE]已删除文件"{path}"')
         except Exception:
-            raise Exceptions.TerminalError(f'未能成功删除文件"{path}"')
+            raise Errors.TerminalError(f'未能成功删除文件"{path}"')
     return i_url
 
 def getImage(tags: list[list]) -> dict[str, str]:

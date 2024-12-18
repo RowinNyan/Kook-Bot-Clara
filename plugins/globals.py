@@ -1,7 +1,7 @@
 import json
 
-with open('config.json', 'r', encoding='utf-8') as f:
-    data: dict = json.load(f)
+with open('.\\config\\config.json', 'r', encoding='utf-8') as file:
+    data: dict = json.load(file)
 NAME : str  = data.get('name', '凌依喵')
 DESCR: str  = data.get('description')
 VER  : str  = data.get('version')
